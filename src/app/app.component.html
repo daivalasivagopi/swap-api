@@ -1,0 +1,57 @@
+<div fxLayout="column" class="starwar-content mat-elevation-z2">
+    <mat-form-field fxFlex="30">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+    </mat-form-field>
+    <div fxLayout="column" class="mat-elevation-z8" fxLayoutGap="5px">
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                <th mat-header-cell *matHeaderCellDef> {{column | titlecase}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+            </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                    <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div fxLayout="column">
+                            <div fxLayout="row">
+                                <div fxLayout="column" fxLayoutGap="4px" class="example-element-diagram">
+                                    <div>
+                                        <span class="sub-head">Height:</span> {{element.height}}</div>
+                                    <div>
+                                        <span class="sub-head">Mass:</span> {{element.mass}}</div>
+                                    <div>
+                                        <span class="sub-head">Hair color:</span> {{element.hair_color}}</div>
+                                    <div>
+                                        <span class="sub-head">Skin color:</span> {{element.skin_color}}</div>
+                                    <div>
+                                        <span class="sub-head">Eye color:</span> {{element.eye_color}}</div>
+                                </div>
+                                <div fxLayout="column" fxLayoutGap="4px" class="example-element-description">
+                                    <div>
+                                        <span class="sub-head">Date of birth:</span> {{element.birth_year}}</div>
+                                    <div>
+                                        <span class="sub-head">Home World:</span> {{element.homeworld}}</div>
+                                </div>
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+        <div class="paginator" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="end center">
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            <button mat-flat-button color="primary" (click)="onLoadMore()">Load more</button>
+        </div>
+    </div>
+</div>
+<app-charts></app-charts>
